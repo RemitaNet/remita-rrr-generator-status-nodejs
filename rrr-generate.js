@@ -16,6 +16,7 @@ var totalAmount = "100";
 var d = new Date();
 var orderId = d.getTime();
 
+//Data
 var payerName = "Michelle Alozie";
 var payerEmail = "alozie@systemspecs.com.ng";
 var payerPhone = "09062067384";
@@ -23,7 +24,17 @@ var description = "Payment for Donation 3";
 
 //Encryption
 var apiHash = cryptoJS.SHA512(merchantId + serviceTypeId + orderId + totalAmount + apiKey);
-// console.log('apiHash: ' + apiHash);
+
+//Body
+var data = new TextEncoder().encode(JSON.stringify({
+    'serviceTypeId': serviceTypeId,
+    'amount': totalAmount,
+    'orderId': orderId,
+    'payerName': payerName,
+    'payerEmail': payerEmail,
+    'payerPhone': payerPhone,
+    'description': description
+}))
 
 //Request
 var options = {
@@ -34,16 +45,7 @@ var options = {
         'Content-Type': 'application/json',
         'Authorization': 'remitaConsumerKey=' + merchantId + ',remitaConsumerToken=' + apiHash
     },
-    body: {
-        'serviceTypeId': serviceTypeId,
-        'amount': totalAmount,
-        'orderId': orderId,
-        'payerName': payerName,
-        'payerEmail': payerEmail,
-        'payerPhone': payerPhone,
-        'description': description
-    },
-    json: true
+    data: data
 };
 
 //Response
@@ -64,4 +66,5 @@ callback = function (response) {
 }
 
 var req = https.request(options, callback);
+req.write(data)
 req.end();
