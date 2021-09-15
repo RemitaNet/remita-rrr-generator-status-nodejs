@@ -60,7 +60,8 @@ callback = function (response) {
     });
 
     response.on('end', function () {
-        console.log('response: ' + str);
+        var response = str.substr(7, 80);
+        console.log('response: ' + response);
     });
 
 }
